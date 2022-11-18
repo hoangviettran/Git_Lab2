@@ -43,7 +43,7 @@
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-
+int hour, minute, second;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -53,6 +53,7 @@ static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int num);
 void update7SEG(int index);
+void updateClockBuffer();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -95,8 +96,24 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  hour = 15, minute = 8, second = 50;
   while (1)
   {
+	  //ex5
+	  	  second++;
+	  	  if(second >= 60){
+	  		  second = 0;
+	  		  minute++;
+	  	  }
+	  	  if(minute >= 60){
+	  		  minute = 0;
+	  		  hour++;
+	  	  }
+	  	  if(hour >= 24){
+	  		  hour = 0;
+	  	  }
+	  	  updateClockBuffer();
+	  	  HAL_Delay(10);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -226,11 +243,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int counter = 50;
+int counter = 25;
 int status = 0;
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
-	//ex4
+	//ex5
 	counter--;
 	if(counter <= 0 && status == 0){
 		HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
@@ -259,6 +276,14 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1,8,3,4};
+//ex5
+void updateClockBuffer(){
+    led_buffer[0] = hour/10;
+    led_buffer[1] = hour%10;
+    led_buffer[2] = minute/10;
+    led_buffer[3] = minute%10;
+}
+
 void update7SEG(int index){
 	switch(index){
 	case 0:

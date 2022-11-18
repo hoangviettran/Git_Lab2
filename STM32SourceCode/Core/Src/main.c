@@ -230,29 +230,27 @@ int counter = 50;
 int status = 0;
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
-	//ex3
+	//ex4
 	counter--;
 	if(counter <= 0 && status == 0){
 		HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
-		counter = 50;
+		counter = 25;
 		update7SEG(1);
 		status = 1;
 	}
 	else if(counter <= 0 &&  status == 1){
-		HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
-		counter = 50;
+		counter = 25;
 		update7SEG(2);
 		status = 2;
 	}
 	else if(counter <= 0 &&  status == 2){
 		HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
-		counter = 50;
+		counter = 25;
 		update7SEG(3);
 		status = 3;
 	}
 	else if(counter <= 0 &&  status == 3){
-		HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
-		counter = 50;
+		counter = 25;
 		update7SEG(0);
 		status = 0;
 	}

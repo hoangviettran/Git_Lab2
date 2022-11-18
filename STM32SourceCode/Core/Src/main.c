@@ -96,12 +96,13 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  setTimer0 (250) ;
-  setTimer1(500);
+  setTimer0(1000);
+  setTimer1(250);
   hour = 15, minute = 8, second = 50;
+  int state = 0;
   while (1)
   {
-	  //ex7
+	  //ex8
 	  if( timer0_flag == 1) {
 		  second++;
 		  if(second >= 60){
@@ -116,11 +117,31 @@ int main(void)
 			  hour = 0;
 		  }
 		  updateClockBuffer();
-	  	  setTimer0 (50) ;
+	  	  setTimer0 (10) ;
 	  }
 	  if(timer1_flag == 1){
-		  HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
-		  setTimer1(500);
+		  if(state == 0){
+				HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
+				setTimer1 (250);
+				update7SEG(1);
+				state = 1;
+		  }
+		  else if(state == 1){
+				setTimer1 (250);
+				update7SEG(2);
+				state = 2;
+		  }
+		  else if(state == 2){
+				HAL_GPIO_TogglePin ( DOT_GPIO_Port , DOT_Pin) ;
+				setTimer1 (250);
+				update7SEG(3);
+				state = 3;
+		  }
+		  else{
+				setTimer1 (250);
+				update7SEG(0);
+				state = 0;
+		  }
 	  }
     /* USER CODE END WHILE */
 
@@ -251,33 +272,8 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int counter = 25;
-int status = 0;
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
-	//ex4
-	counter--;
-	if(counter <= 0 && status == 0){
-		counter = 25;
-		update7SEG(1);
-		status = 1;
-	}
-	else if(counter <= 0 &&  status == 1){
-		counter = 25;
-		update7SEG(2);
-		status = 2;
-	}
-	else if(counter <= 0 &&  status == 2){
-		counter = 25;
-		update7SEG(3);
-		status = 3;
-	}
-	else if(counter <= 0 &&  status == 3){
-		counter = 25;
-		update7SEG(0);
-		status = 0;
-	}
-	//ex6
 	timer_run();
 }
 
